@@ -1,0 +1,17 @@
+{% extends "main/layout.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>{{ award.name }} Award</h1>
+    <p>{{ award.about }}</p>
+    <p>{{ award.students.count() }} student(s) have this award, adding up to {{ award.total_hours()|format_number }} total hours.</p>
+    {% if students %}
+        {{ wtf.quick_form(search_form) }}
+        {% for student in students %}
+            {% include 'main/_student.html' %}
+        {% endfor %}
+        {% include '_pager.html' %}
+    {% else %}
+        <p>No results.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "reports/layout.html" %}
+
+{% block content %}
+    <h1>Students</h1>
+    {% if students %}
+        <table class="my-table">
+            {% for student in students %}
+                {% include 'reports/_student.html' %}
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No students.</p>
+    {% endif %}
+{% endblock %}

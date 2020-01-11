@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Andrew Johnson",
+    "number": 1,
+    "grade": 11,
+    "service_hours": 52,
+    "awards": ["Community"]
+  },
+  {
+    "name": "George Lucas",
+    "number": 2,
+    "grade": 12,
+    "service_hours": 501,
+    "awards": ["Community", "Service", "Achievement"]
+  },
+  {
+    "name": "John Doe",
+    "number": 3,
+    "grade": 12,
+    "service_hours": 20,
+    "awards": []
+  }
+]

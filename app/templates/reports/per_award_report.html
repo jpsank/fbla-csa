@@ -1,0 +1,8 @@
+{% extends "reports/layout.html" %}
+
+{% block content %}
+    <h1>CSA Programs</h1>
+    {% for award in awards %}
+        {% include 'reports/_award.html' %}
+    {% endfor %}
+{% endblock %}

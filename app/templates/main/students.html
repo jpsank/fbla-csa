@@ -1,0 +1,16 @@
+{% extends "main/layout.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Students</h1>
+    <p><a href="{{ url_for('main.create_student') }}">Create new student</a></p>
+    {% if students %}
+        {{ wtf.quick_form(search_form) }}
+        {% for student in students %}
+            {% include 'main/_student.html' %}
+        {% endfor %}
+        {% include '_pager.html' %}
+    {% else %}
+        <p>No results.</p>
+    {% endif %}
+{% endblock %}

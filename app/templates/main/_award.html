@@ -1,0 +1,4 @@
+<div>
+    <a href="{{ url_for('main.award_page', award_name=award.name) }}">{{ award.name }}</a>
+    <p>{{ award.total_hours()|format_number }} total hours</p>
+</div>

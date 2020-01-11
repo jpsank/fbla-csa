@@ -1,0 +1,9 @@
+<div>
+    <h2>{{ award.name }}</h2>
+    <p>{{ award.total_hours()|format_number }} total hours</p>
+    <table class="my-table">
+        {% for student in award.students %}
+            {% include 'reports/_student.html' %}
+        {% endfor %}
+    </table>
+</div>

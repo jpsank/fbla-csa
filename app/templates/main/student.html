@@ -1,0 +1,36 @@
+{% extends "main/layout.html" %}
+
+{% block app_content %}
+    <table class="table">
+        <tr>
+            <td>
+                <h2>Name: {{ student.name }}</h2>
+                <p>Student Number: {{ student.number }}</p>
+                <p>Grade: {{ student.grade }}</p>
+                <p>Service hours: {{ student.service_hours|format_number }}</p>
+
+                <h3>Community Service Awards</h3>
+                {% if student.awards %}
+                    <ul>
+                        {% for award in student.awards %}
+                            <li><a href="{{ url_for('main.award_page', award_name=award.name) }}">{{ award.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>This student has no awards.</p>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p><a href="{{ url_for('main.edit_student', number=student.number) }}">
+                    Edit
+                </a></p>
+                <p><a href="{{ url_for('main.delete_student', number=student.number) }}"
+                      onclick="return confirm('Are you sure you want to delete {{ student.name }}?')">
+                    Delete
+                </a></p>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+__pycache__/
+venv/
+
+app.db
+migrations/
+requirements.txt
+todo.txt
+
+

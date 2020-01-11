@@ -1,0 +1,9 @@
+{% extends "main/layout.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Types of Awards</h1>
+    {% for award in awards %}
+        {% include 'main/_award.html' %}
+    {% endfor %}
+{% endblock %}

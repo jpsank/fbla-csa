@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Community",
+    "about": "The CSA Community Award is active from 0 to 50 hours and EARNED when 50 hours are accomplished."
+  },
+  {
+    "name": "Service",
+    "about": "The CSA Service Award is active from 51 hours to 200 hours and EARNED when 200 hours are accomplished."
+  },
+  {
+    "name": "Achievement",
+    "about": "The CSA Achievement Award is active from 201 hours to 500 hours and EARNED when 500 hours are accomplished."
+  }
+]
