@@ -13,7 +13,9 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class StudentForm(FlaskForm):
-    number = IntegerField('Student Number', validators=[NaturalNumber()])
+    number = IntegerField('Student Number',
+                          validators=[NaturalNumber(),
+                                      Unique(Student.get_by_number, message="This student number already exists.")])
     name = StringField('Name', validators=[DataRequired(), ValidLength(Student.name), ValidName()])
     grade = IntegerField('Grade')
 
@@ -26,11 +28,7 @@ class StudentForm(FlaskForm):
         super().__init__(*args, **kwargs)
         self.awards.choices = [(award.name, award.name) for award in Award.query.all()]
 
-        unique = Unique(Student.get_by_number)
-        if student is not None:
-            unique.allowed = [student.number]
-        self.number.validators.append(unique)
-
+        self.number.validators[1].allowed = [] if student is None else [student.number]
 
 
 class SearchForm(FlaskForm):

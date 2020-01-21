@@ -71,4 +71,4 @@ def create_app():
     return app
 
 
-import app.models
+from app import models
