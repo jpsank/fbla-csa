@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import widgets, StringField, FloatField, IntegerField, SubmitField, SelectMultipleField
+from wtforms import widgets, StringField, FloatField, IntegerField, SubmitField, SelectMultipleField, SelectField
 from wtforms.validators import DataRequired
 
 from app import db
@@ -17,7 +17,7 @@ class StudentForm(FlaskForm):
                           validators=[NaturalNumber(),
                                       Unique(Student.get_by_number, message="This student number already exists.")])
     name = StringField('Name', validators=[DataRequired(), ValidLength(Student.name), ValidName()])
-    grade = IntegerField('Grade')
+    grade = SelectField('Grade', choices=[(9, 9), (10, 10), (11, 11), (12, 12)], coerce=int)
 
     service_hours = FloatField('Service Hours')
     awards = MultiCheckboxField('Service Awards')

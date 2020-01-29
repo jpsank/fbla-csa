@@ -32,7 +32,7 @@ def student_factory(n=50):
         last = random.choice(last_names)
         hours = round(random.random()*800)
 
-        stud = Student(number=i, name=first + " " + last,
+        stud = Student(number=i+1, name=first + " " + last,
                        grade=random.randint(9, 12), service_hours=hours)
         for (a, min_hours) in possible_awards:
             if hours >= min_hours:

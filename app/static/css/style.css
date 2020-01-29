@@ -37,3 +37,8 @@ table.my-table td {
     padding: 10px;
     background-color: whitesmoke;
 }
+
+
+.margin-5 {
+    margin: 5px;
+}

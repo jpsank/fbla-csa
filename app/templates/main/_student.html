@@ -13,7 +13,7 @@
         </td>
         <td>
             {% for award in student.awards %}
-                <a href="{{ url_for('main.award_page', award_name=award.name) }}">{{ award.name }}</a>
+                <a class="margin-5" href="{{ url_for('main.award_page', award_name=award.name) }}">{{ award.name }}</a>
             {% endfor %}
         </td>
     </tr>
