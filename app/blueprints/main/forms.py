@@ -18,7 +18,8 @@ class StudentForm(FlaskForm):
                           validators=[NaturalNumber(),
                                       Unique(Student.get_by_number, message="This student number already exists.")])
     name = StringField('Name', validators=[DataRequired(), ValidLength(Student.name), ValidName()])
-    grade = SelectField('Grade', choices=[(9, 9), (10, 10), (11, 11), (12, 12)], coerce=int)
+    grade = SelectField('Grade', choices=[(0, '-----'), (9, 9), (10, 10), (11, 11), (12, 12)], coerce=int,
+                        validators=[DataRequired()])
 
     service_hours = FloatField('Service Hours')
     awards = MultiCheckboxField('Service Awards')
