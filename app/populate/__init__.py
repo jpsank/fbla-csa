@@ -1,18 +1,10 @@
 from flask import current_app
-import json
+import json, random
 import os
 
 from app import db
 from app.models import Student, Award
 from config import basedir
-
-
-def create_student(stud):
-    s = Student(number=stud["number"], name=stud["name"], grade=stud["grade"], service_hours=stud["service_hours"])
-    if "awards" in stud:
-        for award_name in stud["awards"]:
-            s.give_award(Award.get_by_name(award_name))
-    return s
 
 
 def create_award(a):
@@ -26,8 +18,29 @@ for award in awards:
 db.session.commit()
 
 
-with open(os.path.join(basedir, "app/populate/fake_students.json"), "r") as f:
-    fake_students = json.load(f)
-for student in fake_students:
-    db.session.add(create_student(student))
+def student_factory(n=50):
+    with open(os.path.join(basedir, "app/populate/firstnames.json"), "r") as f:
+        first_names = json.load(f)
+    with open(os.path.join(basedir, "app/populate/surnames.json"), "r") as f:
+        last_names = json.load(f)
+
+    possible_awards = [("Community", 50), ("Service", 200), ("Achievement", 500)]
+    possible_awards = [(Award.get_by_name(name), h) for (name, h) in possible_awards]
+
+    for i in range(n):
+        first = random.choice(first_names)
+        last = random.choice(last_names)
+        hours = round(random.random()*800)
+
+        stud = Student(number=i, name=first + " " + last,
+                       grade=random.randint(9, 12), service_hours=hours)
+        for (a, min_hours) in possible_awards:
+            if hours >= min_hours:
+                stud.give_award(a)
+
+        yield stud
+
+
+for student in student_factory():
+    db.session.add(student)
 db.session.commit()
