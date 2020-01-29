@@ -4,6 +4,10 @@
     <div class="jumbotron">
         <img src="{{ url_for('static', filename='img/fbla-pbl.png') }}">
     </div>
-    <p><a href="{{ url_for('main.per_student_report') }}">Generate report of total service hours per student</a></p>
-    <p><a href="{{ url_for('main.per_award_report') }}">Generate report of total hours per CSA program category</a></p>
+    {% if is_admin %}
+        <p><a href="{{ url_for('main.per_student_report') }}">Generate report of total service hours per student</a></p>
+        <p><a href="{{ url_for('main.per_award_report') }}">Generate report of total hours per CSA program category</a></p>
+    {% else %}
+        <p><a href="{{ url_for('main.login') }}">Log in to make changes</a></p>
+    {% endif %}
 {% endblock %}

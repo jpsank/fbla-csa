@@ -1,13 +1,14 @@
 from datetime import datetime
-from flask import render_template, flash, redirect, request, url_for, current_app, abort, make_response
+from flask import render_template, flash, redirect, request, url_for, current_app, abort, make_response, session
 from flask_login import current_user, login_required
 from sqlalchemy import func
 import pdfkit
+from functools import wraps
 
 from app.blueprints.main import bp
 from app import db
 from app.models import Student, Award
-from app.blueprints.main.forms import StudentForm, SearchForm
+from app.blueprints.main.forms import StudentForm, SearchForm, AdminPassForm
 
 
 def paginate(items, per_page=None):
@@ -22,12 +23,63 @@ def paginate(items, per_page=None):
     return items, next_url, prev_url
 
 
+def admin_required(fn):
+    @wraps(fn)
+    def decorated_view(*args, **kwargs):
+        if not is_admin():
+            flash('You must log in to access this page.')
+            return redirect(url_for('main.login'))
+        return fn(*args, **kwargs)
+    return decorated_view
+
+
+def is_admin():
+    return 'is_admin' in session
+
+
+def login_admin():
+    session['is_admin'] = ''
+
+
+def logout_admin():
+    session.pop('is_admin')
+
+
+def render_admin_template(*args, **kwargs):
+    return render_template(*args, **kwargs, is_admin=is_admin())
+
+
+# ------------------------------ LOGIN ------------------------------
+
+
+@bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if is_admin():
+        return redirect(url_for('main.index'))
+    form = AdminPassForm()
+    if form.validate_on_submit():
+        if form.password.data == current_app.config['ADMIN_PASS']:
+            login_admin()
+            return redirect(url_for('main.index'))
+        else:
+            flash('Invalid password')
+            return redirect(url_for('main.login'))
+    return render_admin_template('main/login.html', title='Admin Login', form=form)
+
+
+@bp.route('/logout')
+@admin_required
+def logout():
+    logout_admin()
+    return redirect(url_for('main.index'))
+
+
 # ------------------------------ FRONT PAGES ------------------------------
 
 @bp.route('/')
 @bp.route('/index')
 def index():
-    return render_template('main/home.html', title='Home')
+    return render_admin_template('main/home.html', title='Home')
 
 
 @bp.route('/students', methods=['GET', 'POST'])
@@ -41,15 +93,15 @@ def students_page():
 
     students, next_url, prev_url = paginate(students)
 
-    return render_template('main/students.html', title='Students',
-                           search_form=search_form,
-                           students=students.items, next_url=next_url, prev_url=prev_url)
+    return render_admin_template('main/students.html', title='Students',
+                                 search_form=search_form,
+                                 students=students.items, next_url=next_url, prev_url=prev_url)
 
 
 @bp.route('/awards', methods=['GET'])
 def award_categories():
     awards = Award.query.all()
-    return render_template('main/award_categories.html', title='Types of Awards', awards=awards)
+    return render_admin_template('main/award_categories.html', title='Types of Awards', awards=awards)
 
 
 @bp.route('/award/<award_name>', methods=['GET', 'POST'])
@@ -67,9 +119,9 @@ def award_page(award_name):
 
     students, next_url, prev_url = paginate(students)
 
-    return render_template('main/award_page.html', title='{} Award'.format(award.name),
-                           search_form=search_form,
-                           award=award, students=students.items, next_url=next_url, prev_url=prev_url)
+    return render_admin_template('main/award_page.html', title='{} Award'.format(award.name),
+                                 search_form=search_form,
+                                 award=award, students=students.items, next_url=next_url, prev_url=prev_url)
 
 
 # ------------------------------ STUDENTS ------------------------------
@@ -79,10 +131,11 @@ def show_student(number):
     student = Student.get_by_number(number)
     if student is None:
         return abort(404)
-    return render_template('main/student.html', student=student)
+    return render_admin_template('main/student.html', student=student)
 
 
 @bp.route('/edit_student/<number>', methods=['GET', 'POST'])
+@admin_required
 def edit_student(number):
     student = Student.get_by_number(number)
     if student is None:
@@ -111,11 +164,12 @@ def edit_student(number):
 
         form.process()
 
-    return render_template('main/edit_student.html', student=student, title='Edit Student',
-                           form=form)
+    return render_admin_template('main/edit_student.html', student=student, title='Edit Student',
+                                 form=form)
 
 
 @bp.route('/create_student', methods=['GET', 'POST'])
+@admin_required
 def create_student():
     form = StudentForm()
     if form.validate_on_submit():
@@ -130,11 +184,12 @@ def create_student():
         flash('Your new student has been saved.')
         return redirect(url_for('main.show_student', number=student.number))
 
-    return render_template('main/create_student.html', title='New Student',
-                           form=form)
+    return render_admin_template('main/create_student.html', title='New Student',
+                                 form=form)
 
 
 @bp.route('/delete_student/<number>')
+@admin_required
 def delete_student(number):
     student = Student.get_by_number(number)
     if student is None:
@@ -160,12 +215,14 @@ def render_template_as_pdf(template_name, **context):
 
 
 @bp.route('/per_student_report', methods=['GET'])
+@admin_required
 def per_student_report():
     students = Student.query.all()
     return render_template_as_pdf('reports/per_student_report.html', students=students)
 
 
 @bp.route('/per_award_report', methods=['GET'])
+@admin_required
 def per_award_report():
     awards = Award.query.all()
     return render_template_as_pdf('reports/per_award_report.html', awards=awards)

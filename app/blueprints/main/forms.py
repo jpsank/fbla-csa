@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import widgets, StringField, FloatField, IntegerField, SubmitField, SelectMultipleField, SelectField
+from wtforms import widgets, StringField, FloatField, IntegerField, SubmitField, \
+    SelectMultipleField, SelectField, PasswordField
 from wtforms.validators import DataRequired
 
 from app import db
@@ -33,4 +34,9 @@ class StudentForm(FlaskForm):
 
 class SearchForm(FlaskForm):
     search = StringField('Search')
+
+
+class AdminPassForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 

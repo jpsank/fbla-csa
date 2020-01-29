@@ -29,6 +29,11 @@
                     <li><a href="{{ url_for('main.award_categories') }}">Awards</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    {% if is_admin %}
+                        <li><a href="{{ url_for('main.logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('main.login') }}">Login</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

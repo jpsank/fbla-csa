@@ -1,5 +1,7 @@
 # FBLA CSA
 
+My project for the FBLA Coding & Programming Competitive Event: "Develop an original computer program to track hours for the Community Service Awards program for your chapter members"
+
 ## Installation
 
 Installation is pretty simple. Clone the repo, then install python dependencies with pip:
