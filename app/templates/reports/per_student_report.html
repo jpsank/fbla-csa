@@ -2,12 +2,13 @@
 
 {% block content %}
     <h1>Students</h1>
+    <p>Generated <span id="date"></span></p>
     {% if students %}
-        <table class="my-table">
+        <div>
             {% for student in students %}
                 {% include 'reports/_student.html' %}
             {% endfor %}
-        </table>
+        </div>
     {% else %}
         <p>No students.</p>
     {% endif %}

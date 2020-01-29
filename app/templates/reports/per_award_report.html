@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>CSA Programs</h1>
+    <p>Generated <span id="date"></span></p>
     {% for award in awards %}
         {% include 'reports/_award.html' %}
     {% endfor %}
